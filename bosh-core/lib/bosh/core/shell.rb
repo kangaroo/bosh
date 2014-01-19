@@ -1,3 +1,5 @@
+require 'pty'
+
 module Bosh::Core
   class Shell
     def initialize(stdout = $stdout)
@@ -21,10 +23,13 @@ module Bosh::Core
       stdout.puts command if options[:output_command]
       lines = []
 
-      IO.popen(command).each do |line|
-        stdout.puts line.chomp
-        lines << line.chomp
-      end.close
+      IO.popen(command) do |io|
+        while line = io.gets
+          stdout.puts line.chomp
+          lines << line.chomp
+        end
+        io.close
+      end
 
       lines
     end

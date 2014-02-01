@@ -32,7 +32,7 @@ describe Bosh::AwsCloud::Cloud do
     )
   end
 
-  let(:ami) { 'ami-809a48e9' } # ubuntu-lucid-10.04-i386-server-20120221 on instance store
+  let(:ami) { 'ami-5dd0ba34' } # ubuntu-raring-13.04-amd64-server-20130601 on instance store
 
   before do
     AWS::EC2.new(
@@ -68,7 +68,7 @@ describe Bosh::AwsCloud::Cloud do
     describe 'VM lifecycle with light stemcells' do
       it 'excercises vm lifecycle with light stemcell' do
         expect {
-          stemcell_id = cpi.create_stemcell('/not/a/real/path', { 'ami' => { 'us-east-1' => 'ami-809a48e9' } })
+          stemcell_id = cpi.create_stemcell('/not/a/real/path', { 'ami' => { 'us-east-1' => 'ami-5dd0ba34' } })
           instance_id = cpi.create_vm(
             nil,
             stemcell_id,

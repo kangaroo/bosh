@@ -32,7 +32,7 @@ module Bosh::Agent
     def write_dhcp_conf
       template = ERB.new(load_erb("dhclient_conf.erb"), 0, '%<>-')
       result = template.result(binding)
-      updated = Bosh::Agent::Util::update_file(result, '/etc/dhcp3/dhclient.conf')
+      updated = Bosh::Agent::Util::update_file(result, '/etc/dhcp/dhclient.conf')
       if updated
         @logger.info("Updated dhclient.conf")
         restart_dhclient
@@ -44,14 +44,14 @@ module Bosh::Agent
     # be flip floping each lease time. So in order to refresh dhclient
     # configuration we need to restart networking.
     #
-    # If dhclient3 cannot release a lease because it collides with a network
+    # If dhclient cannot release a lease because it collides with a network
     # restart (message "receive_packet failed on eth0: Network is down"
-    # appears at /var/log/syslog) then the old dhclient3 process won't be
-    # killed (see bug LP #38140), and there will be two dhclient3 process
+    # appears at /var/log/syslog) then the old dhclient process won't be
+    # killed (see bug LP #38140), and there will be two dhclient process
     # running (and dns changes will be flip floping each lease time). So
-    # before restarting the network, we first kill all dhclient3 process.
+    # before restarting the network, we first kill all dhclient process.
     def restart_dhclient
-      sh("pkill dhclient3", :on_error => :return)
+      sh("pkill dhclient", :on_error => :return)
       sh("/etc/init.d/networking restart", :on_error => :return)
     end
 

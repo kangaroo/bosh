@@ -4,6 +4,11 @@
 
 set -e
 
+# When building with an apt-cache-ng proxy using http_proxy, rubygems will
+# attempt to use the proxy during build and get a 403 CONNECT, lets unset it before
+# attempting to build micro_bosh
+unset http_proxy
+
 base_dir=$(readlink -nf $(dirname $0)/../..)
 source $base_dir/lib/prelude_apply.bash
 source $base_dir/lib/prelude_bosh.bash

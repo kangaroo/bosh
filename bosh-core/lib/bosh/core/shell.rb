@@ -1,5 +1,3 @@
-require 'pty'
-
 module Bosh::Core
   class Shell
     def initialize(stdout = $stdout)
@@ -23,12 +21,19 @@ module Bosh::Core
       stdout.puts command if options[:output_command]
       lines = []
 
-      IO.popen(command) do |io|
-        while line = io.gets
+# When using debootstrap with 13.10+ this causes the spawned shell process to be zombied
+# and a deadlock on the read for the .each block.  Thankfully this stage doesnt need the
+# output so we've extended the options to handle this.
+# I also tried variants of IO.popen and open3 and pyt.  Looking at strace, the child
+# exits successfully, but stays zombied because the parent is still reading its stdin.
+# TODO:  Check if this happens when not using vagrant on osx
+      if options[:output_nocapture]
+        system(command)
+      else
+        IO.popen(command).each do |line|
           stdout.puts line.chomp
           lines << line.chomp
-        end
-        io.close
+        end.close
       end
 
       lines

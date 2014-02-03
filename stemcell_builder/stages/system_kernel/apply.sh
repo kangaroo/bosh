@@ -14,7 +14,7 @@ then
 
   # Headers are needed for open-vm-tools
   pkg_mgr install linux-image-virtual-${variant} linux-headers-virtual-${variant}
-elif [ $DISTRIB_CODENAME == "raring" ]
+elif [ $DISTRIB_CODENAME == "trusty" ]
 then
   pkg_mgr install linux-image-virtual linux-image-extra-virtual linux-headers-virtual
 else
